@@ -1,5 +1,12 @@
 package config
 
+import (
+	"fmt"
+	"os"
+
+	"gopkg.in/yaml.v2"
+)
+
 type Environment struct {
 	// Vault address, approle login credentials, and secret locations
 	VaultAddress       string `env:"VAULT_ADDRESS"                 default:"localhost:8200"               description:"Vault address"                                          long:"vault-address"`
@@ -7,10 +14,23 @@ type Environment struct {
 }
 type VaultParameters struct {
 	// connection parameters
-	Address         string
-	ApproleRoleID   string
-	ApproleSecretID string
+	Address         string `yaml:"address"`
+	ApproleRoleID   string `yaml:"approleRoleId"`
+	ApproleSecretID string `yaml:"approleSecretId"`
 
 	// the locations / field names of our two secrets
-	SecretPath string
+	SecretsPath []string `yaml:"secretsPath"`
+}
+
+func Load(path string) VaultParameters {
+
+	data, err := os.ReadFile(path)
+	if err != nil {
+		fmt.Printf("Unable to load configuration from file :%s\n", path)
+	}
+	vaultParameters := VaultParameters{}
+	if err = yaml.Unmarshal(data, &vaultParameters); err != nil {
+		fmt.Printf("error while parsing config file=%s \n error = %v\n", path, err)
+	}
+	return vaultParameters
 }

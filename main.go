@@ -4,17 +4,26 @@ import (
 	"context"
 	"easy-vault/config"
 	"easy-vault/vault"
+	"flag"
 	"fmt"
+)
+
+var (
+	configFile string
 )
 
 func main() {
 
-	vaultParam := config.VaultParameters{
-		Address:         "http://127.0.0.1:1234",
-		ApproleRoleID:   "c33d9ce8-0594-e038-ff07-dec972282ca9",
-		ApproleSecretID: "aef9fb14-fa3d-0b5b-a016-64658475a692",
-		SecretPath:      "kv/test/demo",
-	}
+	/*vaultParam := config.VaultParameters{
+		Address:         "http://192.168.43.20:1234",
+		ApproleRoleID:   "5c5a9055-5ab0-adba-7278-2ab21a9acabc",
+		ApproleSecretID: "85030def-bed5-d967-8cb4-7b719c03352c",
+		SecretsPath:      []string{"kv/test/demo"},
+	}*/
+	flag.StringVar(&configFile, "config", "vault.yaml", "vault config file path")
+
+	vaultParam := config.Load(configFile)
+	fmt.Print(vaultParam)
 	ctx := context.Background()
 	vClient, _, err := vault.NewVaultAppRoleClient(ctx, vaultParam)
 
@@ -27,4 +36,5 @@ func main() {
 		panic(err)
 	}
 	fmt.Println(secrets)
+	ExportSecrets(secrets)
 }

@@ -1,0 +1,5 @@
+address: http://localhost:1234
+approleRoleId: 5c5a9055-5ab0-adba-7278-2ab21a9acabc
+approleSecretId: 85030def-bed5-d967-8cb4-7b719c03352c
+secretsPath: 
+  - kv/test/demo
