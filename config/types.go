@@ -19,7 +19,12 @@ type VaultParameters struct {
 	ApproleSecretID string `yaml:"approleSecretId"`
 
 	// the locations / field names of our two secrets
-	SecretsPath []string `yaml:"secretsPath"`
+	Secrets []Secret `yaml:"secretsPath"`
+}
+
+type Secret struct {
+	Path   string `yaml:"path"`
+	Engine string `yaml:"secretEngine"`
 }
 
 func Load(path string) VaultParameters {

@@ -84,10 +84,21 @@ func (v *Vault) login(ctx context.Context) (*vault.Secret, error) {
 
 // GetSecretAPIKey fetches the latest version of secret api key from kv-v2
 func (v *Vault) GetSecretAPIKey(ctx context.Context) (map[string]interface{}, error) {
-	log.Println("getting secret api key from vault")
+	log.Println("getting secret api key from vault %v", v.parameters.Secrets)
 
-	kv2 := v.client.KVv2("kv/test/")
-	fmt.Printf("kv2: %v\n", kv2)
-	secret, err := kv2.Get(context.Background(), "demo")
-	return secret.Data, err
+	secrets := make(map[string]interface{})
+	for _, secretConfig := range v.parameters.Secrets {
+
+		kv2 := v.client.KVv2(secretConfig.Engine)
+		secret, err := kv2.Get(context.Background(), secretConfig.Path)
+		if err != nil {
+			fmt.Printf("Error while fetching secrets %s : %v", fmt.Sprintf("%s/%s", secretConfig.Engine, secretConfig.Path), err)
+		}
+
+		for k, v := range secret.Data {
+			secrets[k] = v
+		}
+
+	}
+	return secrets, nil
 }
