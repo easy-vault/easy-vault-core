@@ -6,6 +6,7 @@ import (
 	"easy-vault/vault"
 	"flag"
 	"fmt"
+	"os"
 )
 
 var (
@@ -13,6 +14,7 @@ var (
 )
 
 func main() {
+	os.Setenv("http2debug", "2")
 
 	/*vaultParam := config.VaultParameters{
 		Address:         "http://192.168.43.20:1234",
@@ -23,7 +25,6 @@ func main() {
 	flag.StringVar(&configFile, "config", "vault.yaml", "vault config file path")
 
 	vaultParam := config.Load(configFile)
-	fmt.Print(vaultParam)
 	ctx := context.Background()
 	vClient, _, err := vault.NewVaultAppRoleClient(ctx, vaultParam)
 

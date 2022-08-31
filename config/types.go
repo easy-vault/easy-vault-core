@@ -17,7 +17,7 @@ type VaultParameters struct {
 	Address         string `yaml:"address"`
 	ApproleRoleID   string `yaml:"approleRoleId"`
 	ApproleSecretID string `yaml:"approleSecretId"`
-
+	Namespace       string `yaml:"namespace"`
 	// the locations / field names of our two secrets
 	Secrets []Secret `yaml:"secretsPath"`
 }

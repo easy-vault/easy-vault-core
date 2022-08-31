@@ -69,6 +69,7 @@ func (v *Vault) login(ctx context.Context) (*vault.Secret, error) {
 		return nil, fmt.Errorf("unable to initialize approle authentication method: %w", err)
 	}
 
+	v.client.SetNamespace(v.parameters.Namespace)
 	authInfo, err := v.client.Auth().Login(ctx, appRoleAuth)
 	if err != nil {
 		return nil, fmt.Errorf("unable to login using approle auth method: %w", err)
@@ -84,13 +85,14 @@ func (v *Vault) login(ctx context.Context) (*vault.Secret, error) {
 
 // GetSecretAPIKey fetches the latest version of secret api key from kv-v2
 func (v *Vault) GetSecretAPIKey(ctx context.Context) (map[string]interface{}, error) {
-	log.Println("getting secret api key from vault %v", v.parameters.Secrets)
+	log.Printf("getting secret api key from vault %v", v.parameters.Secrets)
 
 	secrets := make(map[string]interface{})
 	for _, secretConfig := range v.parameters.Secrets {
 
 		kv2 := v.client.KVv2(secretConfig.Engine)
-		secret, err := kv2.Get(context.Background(), secretConfig.Path)
+		ctx := context.Background()
+		secret, err := kv2.Get(ctx, secretConfig.Path)
 		if err != nil {
 			fmt.Printf("Error while fetching secrets %s : %v", fmt.Sprintf("%s/%s", secretConfig.Engine, secretConfig.Path), err)
 		}
