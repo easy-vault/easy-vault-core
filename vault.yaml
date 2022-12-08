@@ -1,0 +1,11 @@
+address: http://localhost:1234
+approleRoleId: c777269f-67c6-ef0a-bd05-405bfaef26f4
+approleSecretId: b21e5663-5266-33ac-5537-6df9a38aee7e
+namespace: admin
+secretsPath: 
+  - secretEngine: kv/test
+    path: demo
+  - secretEngine: kv/test
+    path: demo2
+  - secretEngine: secret
+    path: demo  
